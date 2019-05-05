@@ -22,6 +22,7 @@ export default class DownloadPage extends BaseFlatListComponent {
 
     enbaleRefresh = false;
     enableLoadMore = false;
+    controllerLoadMore = false;
 
     componentDidMount() {
         DownloadManager.addListener(this.callback)
@@ -110,7 +111,7 @@ export default class DownloadPage extends BaseFlatListComponent {
 
     _renderHeader() {
         // let totalSD = (DeviceInfo.getTotalDiskCapacity() / (1024 * 1024 * 1024))
-        // let freeSD = (DeviceInfo.getFreeDiskStorage() / (1024 * 1024 * 1024)) 
+        // let freeSD = (DeviceInfo.getFreeDiskStorage() / (1024 * 1024 * 1024))
         return (
             <View style={{ backgroundColor: 'red', justifyContent: 'center', padding: 5 }}>
                 <Text style={{ color: 'white' }}>下载过程中请保持app为打开状态，否则数据会丢失。已经下载的视频，长按即可删除哦~</Text>

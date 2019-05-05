@@ -19,6 +19,7 @@ export default class BaseFlatListComponent extends BaseComponent {
     pageIndex = 1; //页码角标
     pageSize = 20; //页码大小
     enableLoadMore = true; //是否开启加载更多功能
+    controllerLoadMore = true;
     enbaleRefresh = true;
     numColumns = 1;//几列
 
@@ -62,7 +63,7 @@ export default class BaseFlatListComponent extends BaseComponent {
         if (arrays) {
             return arrays;
         } else {
-            arrays = []
+            arrays = [];
             return arrays;
         }
     }
@@ -76,9 +77,9 @@ export default class BaseFlatListComponent extends BaseComponent {
             return;
             //throw "must override the getRequestAction() function"
         }
-
         requestAction.then(res => {
             let arrays = this.filterResponse(res);
+            console.log(arrays);
             this.enableLoadMore = !(arrays.length < this.pageSize);
             if (this.pageIndex > 1) { //加载更多
                 if (arrays.length == 0) {
@@ -133,7 +134,7 @@ export default class BaseFlatListComponent extends BaseComponent {
      * 加载更多
      */
     loadMore = () => {
-        if (this.enableLoadMore && this.state.datas.length >= this.pageSize) {
+        if (this.enableLoadMore && this.state.datas.length && this.controllerLoadMore >= this.pageSize) {
             this.pageIndex += 1;
             this.initData();
         }
@@ -158,7 +159,7 @@ export default class BaseFlatListComponent extends BaseComponent {
      * 渲染尾部
      */
     renderFlatViewFooter = () => {
-        if (!this.enableLoadMore) return null;
+        if (!this.controllerLoadMore) return null;
         //0 加载更多中 1加载更多失败 2加载更多数据为空
         let loadMoreStatus = this.state.loadMoreStatus;
         if (loadMoreStatus == 0) {

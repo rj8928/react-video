@@ -28,27 +28,52 @@ export default class Banner extends BaseComponent {
     filterData(data) {
         //过滤掉广告轮播
         return data.filter(item => {
-            return item.targetType == 2 && item.videoInfoId != 0;
+            return item.targetType === 2 && item.videoInfoId !== 0;
         })
     }
 
     initData() {
-        setTimeout(() => {
-            let result = this.props.id == 0 ? data.RecommendBannerData : (
-                this.props.id == 1 ? data.MovieBannerData : (
-                    this.props.id == 2 ? data.TVBannerData : (
-                        this.props.id == 3 ? data.CartoonBannerData : data.VarietyBannerData
-                    )
-                )
-            )
-            this.setState({
-                datas: this.filterData(result.data)
-            }, () => this.update(this.LOAD_SUCCESS))
-        }, config.delayed);
+        // setTimeout(() => {
+        //     let result = this.props.id === 0 ? data.RecommendBannerData : (
+        //         this.props.id === 1 ? data.MovieBannerData : (
+        //             this.props.id === 2 ? data.TVBannerData : (
+        //                 this.props.id === 3 ? data.CartoonBannerData : data.VarietyBannerData
+        //             )
+        //         )
+        //     );
+        //     console.log(1,result.data);
+        //     this.setState({
+        //         datas: this.filterData(result.data)
+        //     }, () => this.update(this.LOAD_SUCCESS))
+        // }, config.delayed);
+        // console.log(9999999999);
+        let result = this.props.id === 0 ? "RecommendBannerData" : (
+        this.props.id === 1 ? "MovieBannerData" : (
+          this.props.id === 2 ? "TVBannerData" : (
+            this.props.id === 3 ? "CartoonBannerData" : "VarietyBannerData"
+          )
+        ));
+        let url = "http://10.240.176.145:10086/video_info?name="+result;
+        console.log(url);
+        fetch(url)
+            .then((response) => {
+              return response.json()       // json方式解析，如果是text就是 response.text()
+            })
+            .then((responseData) => {   // 获取到的数据处理
+                  // const data = responseData.json();
+                  // console.log(1,responseData.data.data);
+              this.setState({
+                datas: this.filterData(responseData.data.data)
+              }, () => this.update(this.LOAD_SUCCESS))
+                })
+            .catch((error) => {     // 错误处理
+                })
+            .done();
     }
 
     _enterVideoInfo = data => {
         data.coverUrl = data.thumbnailUrl;
+        console.log(456,data);
         this.props.navigation.navigate("VideoInfoPage", { data })
     }
 
@@ -56,13 +81,14 @@ export default class Banner extends BaseComponent {
         let items = [];
         for (let i = 0; i < this.state.datas.length; i++) {
             let obj = this.state.datas[i];
-            let image = obj.thumbnailUrl ? { uri: obj.thumbnailUrl } : require('../../source/image/nor.png')
+            let image = obj.thumbnailUrl ? { uri: obj.thumbnailUrl } : require('../../source/image/nor.png');
+            // console.log(image);
             let item = (
                 <TouchableOpacity
                     key={'banner' + i}
                     onPress={() => this._enterVideoInfo(obj)}
                     activeOpacity={1}>
-                    <Image style={finalStyle} source={image} resizeMode="cover"></Image>
+                    <Image style={finalStyle} source={image} resizeMode="cover"/>
                     <View style={{ position: 'absolute', bottom: 0, paddingBottom: 25, paddingTop: 5, paddingLeft: 5, width: '100%', backgroundColor: 'rgba(0,0,0,0.3)' }}>
                         <Text
                             numberOfLines={1}

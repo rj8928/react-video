@@ -7,7 +7,7 @@ import {
     TouchableOpacity
 } from 'react-native'
 import BaseFlatListComponent from '../components/BaseFlatListComponent'
-import data from '../../data.json'
+// import data from '../../data.json'
 import config from '../../config.json'
 
 const itemWidth = Math.floor((DEVICE.width - 10) / 3);
@@ -30,11 +30,16 @@ export default class VideoListPage extends BaseFlatListComponent {
     }
 
     getRequestAction(pageIndex, pageSize) {
-        return new Promise((resolve,reject) => {
-            setTimeout(() => {
-                resolve({data:data.MoreData})
-            }, config.delayed);
-        })
+        // return new Promise((resolve,reject) => {
+        //     setTimeout(() => {
+        //       resolve({data: {data: this.props.navigation.state.params.title}})
+        //     }, config.delayed);
+        // });
+        let url = "http://10.240.176.145:10086/more_video?category=";
+        return fetch(url+this.props.navigation.state.params.pageName)
+          .then((response) => {
+                return response.json()
+          })
     }
 
     enterDetialPage = data => {

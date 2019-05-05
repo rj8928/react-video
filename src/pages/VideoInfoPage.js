@@ -7,8 +7,8 @@ import Colors from '../utils/Colors'
 import Toast from 'react-native-root-toast'
 import DownloadManager from '../utils/DownloadManager'
 import Loadding from '../components/Loadding'
-import data from '../../data.json'
-import config from '../../config.json'
+// import data from '../../data.json'
+// import config from '../../config.json'
 
 
 export default class VideoInfo extends BaseComponent {
@@ -55,13 +55,23 @@ export default class VideoInfo extends BaseComponent {
 
     initData() {
         this.queryVideoCollect();
-        setTimeout(() => {
-            this.queryTotalVideoList(data.VideoInfoData.data);
-        }, config.delayed);
+        let id = this.props.navigation.state.params.data.videoInfoId;
+        const data = fetch("http://10.240.176.145:10086/video_list?id="+ id)
+          .then((response)=>{
+            return response.json()
+          })
+          .then((reponse)=> {
+              this.queryTotalVideoList(reponse.data.data.data)
+          });
+
+
+        // setTimeout(() => {
+        //     this.queryTotalVideoList(data.VideoInfoData.data);
+        // }, config.delayed);
     }
 
     queryVideoCollect() {
-        let data = this.props.navigation.state.params.data
+        let data = this.props.navigation.state.params.data;
         queryCollectVideo(data).then(res => {
             if (Object.keys(res).length) {
                 this.setState({ isCollect: true })
@@ -215,13 +225,14 @@ export default class VideoInfo extends BaseComponent {
         if (!this.state.downloadComponentShow) return null;
 
         let data = this.state.totalVideoList;
+        console.log(data);
         let dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
         if (data.length > 1) {
             return (
                 <View style={{ position: 'absolute', left: 0, right: 0, bottom: 0, top: 0, backgroundColor: 'white' }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', height: 45,paddingHorizontal:10 }}>
                         <Text style={{ color: 'black', fontSize: 16 }}>选集</Text>
-                        <Text 
+                        <Text
                             style={{ color: 'black', fontSize: 16 }}
                             onPress={() => this.setState({downloadComponentShow:false})}
                             >关闭</Text>
@@ -325,7 +336,7 @@ export default class VideoInfo extends BaseComponent {
 
     /**
      * 开始下载
-     * @param {*} data 
+     * @param {*} data
      */
     startDownloadVideo(data,index){
         // let qualityMap = new Map();
@@ -373,18 +384,18 @@ export default class VideoInfo extends BaseComponent {
         params.index = index;
         params.id = data.id;
         params.classifyTypeListValue = params.classifyTypeList.join('/')
-        
+
         DownloadManager.downLoad(params)
     }
 
     /**
      * 开始下载视频
-     * @param {*} data 
+     * @param {*} data
      */
     downloadVideo(data,index) {
-        this.showLoadding()
+        this.showLoadding();
         setTimeout(() => {
-            this.startDownloadVideo(config.videoUrl,index)
+            this.startDownloadVideo(data[index].video_url,index)
         }, config.delayed);
     }
 }

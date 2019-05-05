@@ -13,8 +13,8 @@ import BaseComponent from '../components/BaseComponent'
 import { writeHistorySearchContent, queryAllHistorySearchContent, clearAllHistorySearchConten } from '../utils/DButils'
 import Colors from '../utils/Colors'
 import Toast from 'react-native-root-toast'
-import data from '../../data.json'
-import config from '../../config.json'
+// import data from '../../data.json'
+// import config from '../../config.json'
 
 const backIcon = require('../../source/icons/back_icon.png')
 const itemWidth = (DEVICE.width - 20) / 2;
@@ -22,13 +22,21 @@ const itemWidth = (DEVICE.width - 20) / 2;
 export default class SearchPage extends BaseComponent {
 
     state = {
-        datas: data.HotSearchData.data,
+        // datas: data.HotSearchData.data,
+        datas: [],
         historyContents: {},
         content: '',
         LOAD_STATE:this.LOAD_SUCCESS
     }
 
     initData() {
+        fetch("http://10.240.176.145:10086/video_info?name=HotSearchData")
+          .then((response) =>{
+                return response = response.json();
+      })
+          .then((response) => {
+            this.setState({datas: response.data.data})
+          });
         this.queryHistoryVideo()
     }
 
@@ -89,7 +97,7 @@ export default class SearchPage extends BaseComponent {
         keys = Object.keys(this.state.historyContents).reverse();
         keys.splice(10, keys.length);
         let showHistoryContents = keys.length > 0
-       
+
         return (
             <ScrollView contentContainerStyle={{ padding: 10 }}>
                 {

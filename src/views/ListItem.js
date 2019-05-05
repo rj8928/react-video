@@ -19,7 +19,7 @@ export default class ListItem extends React.Component {
     }
 
     enterViedoListPage = data => {
-        this.props.navigation.navigate("VideoListPage", { title: data.title, id: data.id })
+        this.props.navigation.navigate("VideoListPage", { title: "查看更多", id: data.id , pageName:this.props.navigation.state.routeName+"PageData" })
     }
 
     _getTagBackgroundColor = tag => {
