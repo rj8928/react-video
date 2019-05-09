@@ -13,12 +13,12 @@ import {
 } from 'react-native'
 import Slider from "react-native-slider";
 import Orientation from 'react-native-orientation'
-import data from '../../data.json'
+// import data from '../../data.json'
 import config from '../../config.json'
 
 /**
  * 格式化播放时间
- * @param {}} value 
+ * @param {}} value
  */
 function formatTime(value) {
     let h = Math.floor(value / 60 / 60);
@@ -36,13 +36,14 @@ function formatTime(value) {
 }
 
 const ratio = 0.56;
-const rate = [1,1.25,1.5,1.75,2]
+const rate = [1,1.25,1.5,1.75,2];
+// let data = [];
 
 export default class VideoWrapper extends React.Component {
 
     showControler = true;
     qualityMap = new Map();
-    aualityArrays = []
+    aualityArrays = ["480P", "720P", "1080P"];
     currentQuality;
     swichquality = false;
     showQualityModal = false;
@@ -66,7 +67,6 @@ export default class VideoWrapper extends React.Component {
 
     constructor(props) {
         super(props)
-
         this.panResponder = PanResponder.create({
             onMoveShouldSetPanResponder: (e, gestureState) => {
                 let currentPageX = e.nativeEvent.pageX;
@@ -95,7 +95,7 @@ export default class VideoWrapper extends React.Component {
                     offset += 30;
                 }
                 let value = this.state.value + Math.round(offset);
-                
+
                 this.video && this.video.seek(value)
                 this.setState({ showSpeed: true, speedOffset: Math.round(offset) })
             },
@@ -329,7 +329,7 @@ export default class VideoWrapper extends React.Component {
                                 style={{ flex: 1, marginHorizontal: 5 }}>
                             </Slider>
 
-                            <Text 
+                            <Text
                                 style={{paddingHorizontal:5,color:'white'}}
                                 onPress={() => {
                                     let index = this.state.rateIndex + 1;
@@ -422,6 +422,7 @@ export default class VideoWrapper extends React.Component {
     }
 
     getVideoUrl(data, quality) {
+        // return data.m3u8link
         return config.videoUrl
     }
 
@@ -441,11 +442,13 @@ export default class VideoWrapper extends React.Component {
         let videoHeight = this.state.videoHeight;
         let item = this.props.item;
         let url;
+        console.log(15955465489445,item);
         if(item && item.offline){
             url = {uri:'file://' + item.file}
         }else{
             url = item ? { uri: this.getVideoUrl(item, this.currentQuality) } : {};
         }
+        console.log(98994894,url);
         return (
             <View>
                 <Video

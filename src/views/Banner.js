@@ -73,7 +73,6 @@ export default class Banner extends BaseComponent {
 
     _enterVideoInfo = data => {
         data.coverUrl = data.thumbnailUrl;
-        console.log(456,data);
         this.props.navigation.navigate("VideoInfoPage", { data })
     }
 
@@ -109,6 +108,7 @@ export default class Banner extends BaseComponent {
                 activeDotColor={Colors.mainColor}
                 dotColor="white"
                 autoplay={true}
+                autoplayTimeout = {7.0}
                 showsPagination={true}>
                 {items}
             </Swiper>

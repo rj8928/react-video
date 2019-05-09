@@ -59,9 +59,10 @@ export default class VideoInfo extends BaseComponent {
         const data = fetch("http://10.240.176.145:10086/video_list?id="+ id)
           .then((response)=>{
             return response.json()
-          })
-          .then((reponse)=> {
-              this.queryTotalVideoList(reponse.data.data.data)
+          }).then((response)=> {
+            this.queryTotalVideoList(response.data.data.data)
+          }).catch(e =>{
+              console.log(e)
           });
 
 
@@ -96,7 +97,7 @@ export default class VideoInfo extends BaseComponent {
     }
 
     queryTotalVideoList(data) {
-        this.setState({ data, totalVideoList: data.videoList }, () => this.update(this.LOAD_SUCCESS, () => {
+        this.setState({data, totalVideoList: data.videoList }, () => this.update(this.LOAD_SUCCESS, () => {
             if (this.params.history) {
                 this.scrollTask = setTimeout(() => {
                     let videoItemIndex = this.params.level;
@@ -107,7 +108,7 @@ export default class VideoInfo extends BaseComponent {
     }
 
     _renderHeader() {
-        let item = null
+        let item = null;
         //从播放历史进入
         if (this.params.history) {
             this.videoItemIndex = this.params.level;
@@ -115,7 +116,6 @@ export default class VideoInfo extends BaseComponent {
         if (this.state.totalVideoList.length) {
             item = this.state.totalVideoList[this.videoItemIndex]
         }
-
         return (
             <VideoWrapper
                 ref={ref => this.videoWrapper = ref}
@@ -225,7 +225,7 @@ export default class VideoInfo extends BaseComponent {
         if (!this.state.downloadComponentShow) return null;
 
         let data = this.state.totalVideoList;
-        console.log(data);
+        console.log(45644564654,data);
         let dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
         if (data.length > 1) {
             return (
@@ -394,9 +394,9 @@ export default class VideoInfo extends BaseComponent {
      */
     downloadVideo(data,index) {
         this.showLoadding();
-        setTimeout(() => {
-            this.startDownloadVideo(data[index].video_url,index)
-        }, config.delayed);
+        console.log(89498498498498498498498498494,data);
+        this.startDownloadVideo(data[index].video_url,index)
+
     }
 }
 
